@@ -1,0 +1,58 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - autopeer.badaimweeb.me
+  resources:
+  - nodes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - autopeer.badaimweeb.me
+  resources:
+  - nodes/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - autopeer.badaimweeb.me
+  resources:
+  - nodes/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - autopeer.badaimweeb.me.github.com
+  resources:
+  - peerings
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - autopeer.badaimweeb.me.github.com
+  resources:
+  - peerings/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - autopeer.badaimweeb.me.github.com
+  resources:
+  - peerings/status
+  verbs:
+  - get
+  - patch
+  - update

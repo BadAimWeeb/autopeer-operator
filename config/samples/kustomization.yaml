@@ -1,0 +1,5 @@
+## Append samples of your project ##
+resources:
+- autopeer.badaimweeb.me_v1_peering.yaml
+- autopeer_v1_nodes.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

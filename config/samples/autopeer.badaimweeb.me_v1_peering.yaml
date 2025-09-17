@@ -1,0 +1,9 @@
+apiVersion: autopeer.badaimweeb.me.github.com/v1
+kind: Peering
+metadata:
+  labels:
+    app.kubernetes.io/name: autopeer-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: peering-sample
+spec:
+  # TODO(user): Add fields here
