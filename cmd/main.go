@@ -35,7 +35,6 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
-	autopeerbadaimweebmev1 "github.com/BadAimWeeb/autopeer-operator/api/v1"
 	autopeerv1 "github.com/BadAimWeeb/autopeer-operator/api/v1"
 	"github.com/BadAimWeeb/autopeer-operator/internal/controller"
 	// +kubebuilder:scaffold:imports
@@ -49,7 +48,6 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(autopeerbadaimweebmev1.AddToScheme(scheme))
 	utilruntime.Must(autopeerv1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
