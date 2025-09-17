@@ -1,5 +1,5 @@
 /*
-Copyright 2025.
+Copyright 2025 BadAimWeeb.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,7 +35,20 @@ type NodesSpec struct {
 	ExternalAddress *string `json:"externalAddress,omitempty"`
 
 	// Local IPv4 address for this node to be used for peerings.
-	IPv4Address string `json:"ipv4Address"`
+	// Optional if this node only routes IPv6, or we're using Extended Next-Hop.
+	// +optional
+	IPv4Address *string `json:"ipv4Address,omitempty"`
+
+	// BIRD peering configuration directory. The operator will drop peering configs here.
+	// Default to /etc/bird/peers if not set.
+	// +optional
+	PeerConfigDir *string `json:"peerConfigDir,omitempty"`
+
+	// WireGuard configuration directory. The operator will drop WireGuard configs here if needed for peerings.
+	// Internally, wg-quick will be used to manage WireGuard interfaces.
+	// Default to /etc/wireguard if not set.
+	// +optional
+	WGConfigDir *string `json:"wgConfigDir,omitempty"`
 }
 
 // NodesStatus defines the observed state of Nodes.

@@ -43,18 +43,30 @@ spec:
                 description: External address. Required if type is "external".
                 type: string
               ipv4Address:
-                description: Local IPv4 address for this node to be used for peerings.
+                description: |-
+                  Local IPv4 address for this node to be used for peerings.
+                  Optional if this node only routes IPv6, or we're using Extended Next-Hop.
                 type: string
               nodeName:
                 description: Kubernetes node name. Required if type is "k8s".
+                type: string
+              peerConfigDir:
+                description: |-
+                  BIRD peering configuration directory. The operator will drop peering configs here.
+                  Default to /etc/bird/peers if not set.
                 type: string
               type:
                 description: |-
                   Type of node referenced: "k8s" for nodes in the same K8s cluster, "external" for nodes outside the cluster.
                   If node is "external", it must run a companion agent to receive Peering configs and apply them (WIP).
                 type: string
+              wgConfigDir:
+                description: |-
+                  WireGuard configuration directory. The operator will drop WireGuard configs here if needed for peerings.
+                  Internally, wg-quick will be used to manage WireGuard interfaces.
+                  Default to /etc/wireguard if not set.
+                type: string
             required:
-            - ipv4Address
             - type
             type: object
           status:

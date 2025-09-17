@@ -8,6 +8,7 @@ rules:
   - autopeer.badaimweeb.me
   resources:
   - nodes
+  - peerings
   verbs:
   - create
   - delete
@@ -20,37 +21,13 @@ rules:
   - autopeer.badaimweeb.me
   resources:
   - nodes/finalizers
+  - peerings/finalizers
   verbs:
   - update
 - apiGroups:
   - autopeer.badaimweeb.me
   resources:
   - nodes/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - autopeer.badaimweeb.me.github.com
-  resources:
-  - peerings
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - autopeer.badaimweeb.me.github.com
-  resources:
-  - peerings/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - autopeer.badaimweeb.me.github.com
-  resources:
   - peerings/status
   verbs:
   - get

@@ -40,16 +40,17 @@ spec:
             description: spec defines the desired state of Peering
             properties:
               cost:
-                default: 100
+                default: -1
                 description: |-
                   Cost to reach this peer, lower values are preferred.
                   Recommended to be consistent with your IGP cost to be able to fine-tune path selection.
+                  Leave blank to not use cost.
                 format: int32
                 type: integer
               enabled:
                 default: true
                 description: Whether to enable this peering. Disabling a peering will
-                  gracefully shut it down.
+                  shut it down immediately.
                 type: boolean
               enh:
                 description: Extended Next-Hop (ENH) allows routing IPv4 traffic over
@@ -93,8 +94,9 @@ spec:
                       if you want to let remote peer initiate the connection.
                     type: string
                   localPort:
-                    default: 51820
-                    description: Local port for the WireGuard interface.
+                    default: 0
+                    description: Local port for the WireGuard interface. Leave blank
+                      to use a random port (you'll only make outbound connections).
                     format: int32
                     type: integer
                   peerPublicKey:

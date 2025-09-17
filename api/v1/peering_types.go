@@ -1,5 +1,5 @@
 /*
-Copyright 2025.
+Copyright 2025 BadAimWeeb.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -52,11 +52,12 @@ type PeeringSpec struct {
 
 	// Cost to reach this peer, lower values are preferred.
 	// Recommended to be consistent with your IGP cost to be able to fine-tune path selection.
-	// +kubebuilder:default=100
+	// Leave blank to not use cost.
+	// +kubebuilder:default=-1
 	// +optional
 	Cost int32 `json:"cost,omitempty"`
 
-	// Whether to enable this peering. Disabling a peering will gracefully shut it down.
+	// Whether to enable this peering. Disabling a peering will shut it down immediately.
 	// +kubebuilder:default=true
 	// +optional
 	Enabled bool `json:"enabled,omitempty"`
@@ -72,8 +73,8 @@ type PeeringSpec struct {
 }
 
 type WireGuardConfig struct {
-	// Local port for the WireGuard interface.
-	// +kubebuilder:default=51820
+	// Local port for the WireGuard interface. Leave blank to use a random port (you'll only make outbound connections).
+	// +kubebuilder:default=0
 	// +optional
 	LocalPort int32 `json:"localPort,omitempty"`
 
