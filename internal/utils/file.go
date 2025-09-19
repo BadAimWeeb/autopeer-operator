@@ -27,7 +27,7 @@ type FileConfig struct {
 	WireGuard *string
 }
 
-func GenerateConfig(peering *autopeerv1.PeeringSpec, node *autopeerv1.NodesSpec) *FileConfig {
+func GenerateConfig(peering *autopeerv1.PeeringSpec, node *autopeerv1.NodeSpec) *FileConfig {
 	wireguardConfig := ""
 	if node != nil && peering != nil && peering.TunnelType == "wireguard" && peering.WireGuard != nil {
 		wireguardConfig += "[Interface]\n"

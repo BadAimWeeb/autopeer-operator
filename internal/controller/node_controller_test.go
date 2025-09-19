@@ -40,13 +40,13 @@ var _ = Describe("Nodes Controller", func() {
 			Name:      resourceName,
 			Namespace: "default", // TODO(user):Modify as needed
 		}
-		nodes := &autopeerv1.Nodes{}
+		node := &autopeerv1.Node{}
 
 		BeforeEach(func() {
-			By("creating the custom resource for the Kind Nodes")
-			err := k8sClient.Get(ctx, typeNamespacedName, nodes)
+			By("creating the custom resource for the Kind Node")
+			err := k8sClient.Get(ctx, typeNamespacedName, node)
 			if err != nil && errors.IsNotFound(err) {
-				resource := &autopeerv1.Nodes{
+				resource := &autopeerv1.Node{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceName,
 						Namespace: "default",
@@ -59,16 +59,16 @@ var _ = Describe("Nodes Controller", func() {
 
 		AfterEach(func() {
 			// TODO(user): Cleanup logic after each test, like removing the resource instance.
-			resource := &autopeerv1.Nodes{}
+			resource := &autopeerv1.Node{}
 			err := k8sClient.Get(ctx, typeNamespacedName, resource)
 			Expect(err).NotTo(HaveOccurred())
 
-			By("Cleanup the specific resource instance Nodes")
+			By("Cleanup the specific resource instance Node")
 			Expect(k8sClient.Delete(ctx, resource)).To(Succeed())
 		})
 		It("should successfully reconcile the resource", func() {
 			By("Reconciling the created resource")
-			controllerReconciler := &NodesReconciler{
+			controllerReconciler := &NodeReconciler{
 				Client: k8sClient,
 				Scheme: k8sClient.Scheme(),
 			}

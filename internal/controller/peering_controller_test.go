@@ -27,7 +27,7 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	autopeerbadaimweebmev1 "github.com/BadAimWeeb/autopeer-operator/api/v1"
+	autopeerv1 "github.com/BadAimWeeb/autopeer-operator/api/v1"
 )
 
 var _ = Describe("Peering Controller", func() {
@@ -40,13 +40,13 @@ var _ = Describe("Peering Controller", func() {
 			Name:      resourceName,
 			Namespace: "default", // TODO(user):Modify as needed
 		}
-		peering := &autopeerbadaimweebmev1.Peering{}
+		peering := &autopeerv1.Peering{}
 
 		BeforeEach(func() {
 			By("creating the custom resource for the Kind Peering")
 			err := k8sClient.Get(ctx, typeNamespacedName, peering)
 			if err != nil && errors.IsNotFound(err) {
-				resource := &autopeerbadaimweebmev1.Peering{
+				resource := &autopeerv1.Peering{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceName,
 						Namespace: "default",
@@ -59,7 +59,7 @@ var _ = Describe("Peering Controller", func() {
 
 		AfterEach(func() {
 			// TODO(user): Cleanup logic after each test, like removing the resource instance.
-			resource := &autopeerbadaimweebmev1.Peering{}
+			resource := &autopeerv1.Peering{}
 			err := k8sClient.Get(ctx, typeNamespacedName, resource)
 			Expect(err).NotTo(HaveOccurred())
 

@@ -22,8 +22,8 @@ import (
 
 // PeeringSpec defines the desired state of Peering
 type PeeringSpec struct {
-	// Target server to peer with
-	Server string `json:"targetServer"`
+	// Target node to peer with
+	Node string `json:"targetNode"`
 
 	// Peer ASN
 	PeerASN uint32 `json:"peerASN"`

@@ -1,9 +1,9 @@
 apiVersion: autopeer.badaimweeb.me/v1
-kind: Nodes
+kind: Node
 metadata:
   labels:
     app.kubernetes.io/name: autopeer-operator
     app.kubernetes.io/managed-by: kustomize
-  name: nodes-sample
+  name: node-sample
 spec:
   # TODO(user): Add fields here

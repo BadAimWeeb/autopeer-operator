@@ -20,8 +20,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// NodesSpec defines the desired state of Nodes
-type NodesSpec struct {
+// NodeSpec defines the desired state of Node
+type NodeSpec struct {
 	// Type of node referenced: "k8s" for nodes in the same K8s cluster, "external" for nodes outside the cluster.
 	// If node is "external", it must run a companion agent to receive Peering configs and apply them (WIP).
 	Type string `json:"type"`
@@ -41,19 +41,24 @@ type NodesSpec struct {
 
 	// BIRD peering configuration directory. The operator will drop peering configs here.
 	// Default to /etc/bird/peers if not set.
-	// +optional
-	PeerConfigDir *string `json:"peerConfigDir,omitempty"`
+	// +default:value="/etc/bird/peers"
+	PeerConfigDir string `json:"peerConfigDir,omitempty"`
 
 	// WireGuard configuration directory. The operator will drop WireGuard configs here if needed for peerings.
 	// Internally, wg-quick will be used to manage WireGuard interfaces.
 	// Default to /etc/wireguard if not set.
-	// +optional
-	WGConfigDir *string `json:"wgConfigDir,omitempty"`
+	// +default:value="/etc/wireguard"
+	WGConfigDir string `json:"wgConfigDir,omitempty"`
+
+	// Image to be deployed to node to configure the relevant parts for peering, should you choose to differ
+	// from the default image. Only applicable if type is "k8s".
+	// +default:value="ghcr.io/badaimweeb/autopeer-node/job-worker:latest"
+	JobWorkerImage string `json:"jobWorkerImage,omitempty"`
 }
 
-// NodesStatus defines the observed state of Nodes.
-type NodesStatus struct {
-	// conditions represent the current state of the Nodes resource.
+// NodeStatus defines the observed state of Node.
+type NodeStatus struct {
+	// conditions represent the current state of the Node resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -71,32 +76,32 @@ type NodesStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// Nodes is the Schema for the nodes API
-type Nodes struct {
+// Node is the Schema for the node API
+type Node struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty,omitzero"`
 
-	// spec defines the desired state of Nodes
+	// spec defines the desired state of Node
 	// +required
-	Spec NodesSpec `json:"spec"`
+	Spec NodeSpec `json:"spec"`
 
-	// status defines the observed state of Nodes
+	// status defines the observed state of Node
 	// +optional
-	Status NodesStatus `json:"status,omitempty,omitzero"`
+	Status NodeStatus `json:"status,omitempty,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// NodesList contains a list of Nodes
-type NodesList struct {
+// NodeList contains a list of Node
+type NodeList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Nodes `json:"items"`
+	Items           []Node `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Nodes{}, &NodesList{})
+	SchemeBuilder.Register(&Node{}, &NodeList{})
 }

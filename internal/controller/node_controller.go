@@ -31,7 +31,7 @@ import (
 )
 
 // NodesReconciler reconciles a Nodes object
-type NodesReconciler struct {
+type NodeReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
@@ -39,13 +39,14 @@ type NodesReconciler struct {
 // +kubebuilder:rbac:groups=autopeer.badaimweeb.me,resources=nodes,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=autopeer.badaimweeb.me,resources=nodes/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=autopeer.badaimweeb.me,resources=nodes/finalizers,verbs=update
+// +kubebuilder:rbac:groups="",resources=nodes,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-func (r *NodesReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *NodeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = logf.FromContext(ctx)
 
-	nodeData := &autopeerv1.Nodes{}
+	nodeData := &autopeerv1.Node{}
 	err := r.Get(ctx, req.NamespacedName, nodeData)
 	if err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
@@ -134,9 +135,9 @@ func (r *NodesReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *NodesReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *NodeReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&autopeerv1.Nodes{}).
-		Named("nodes").
+		For(&autopeerv1.Node{}).
+		Named("node").
 		Complete(r)
 }

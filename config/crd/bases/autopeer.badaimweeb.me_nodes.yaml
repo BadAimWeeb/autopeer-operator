@@ -8,16 +8,16 @@ metadata:
 spec:
   group: autopeer.badaimweeb.me
   names:
-    kind: Nodes
-    listKind: NodesList
+    kind: Node
+    listKind: NodeList
     plural: nodes
-    singular: nodes
+    singular: node
   scope: Namespaced
   versions:
   - name: v1
     schema:
       openAPIV3Schema:
-        description: Nodes is the Schema for the nodes API
+        description: Node is the Schema for the node API
         properties:
           apiVersion:
             description: |-
@@ -37,7 +37,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of Nodes
+            description: spec defines the desired state of Node
             properties:
               externalAddress:
                 description: External address. Required if type is "external".
@@ -47,10 +47,17 @@ spec:
                   Local IPv4 address for this node to be used for peerings.
                   Optional if this node only routes IPv6, or we're using Extended Next-Hop.
                 type: string
+              jobWorkerImage:
+                default: ghcr.io/badaimweeb/autopeer-node/job-worker:latest
+                description: |-
+                  Image to be deployed to node to configure the relevant parts for peering, should you choose to differ
+                  from the default image. Only applicable if type is "k8s".
+                type: string
               nodeName:
                 description: Kubernetes node name. Required if type is "k8s".
                 type: string
               peerConfigDir:
+                default: /etc/bird/peers
                 description: |-
                   BIRD peering configuration directory. The operator will drop peering configs here.
                   Default to /etc/bird/peers if not set.
@@ -61,6 +68,7 @@ spec:
                   If node is "external", it must run a companion agent to receive Peering configs and apply them (WIP).
                 type: string
               wgConfigDir:
+                default: /etc/wireguard
                 description: |-
                   WireGuard configuration directory. The operator will drop WireGuard configs here if needed for peerings.
                   Internally, wg-quick will be used to manage WireGuard interfaces.
@@ -70,11 +78,11 @@ spec:
             - type
             type: object
           status:
-            description: status defines the observed state of Nodes
+            description: status defines the observed state of Node
             properties:
               conditions:
                 description: |-
-                  conditions represent the current state of the Nodes resource.
+                  conditions represent the current state of the Node resource.
                   Each condition has a unique type and reflects the status of a specific aspect of the resource.
 
                   Standard condition types include:

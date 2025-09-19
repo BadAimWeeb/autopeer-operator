@@ -185,11 +185,11 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Peering")
 		os.Exit(1)
 	}
-	if err := (&controller.NodesReconciler{
+	if err := (&controller.NodeReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Nodes")
+		setupLog.Error(err, "unable to create controller", "controller", "Node")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder
