@@ -48,7 +48,7 @@ spec:
                   Optional if this node only routes IPv6, or we're using Extended Next-Hop.
                 type: string
               jobWorkerImage:
-                default: ghcr.io/badaimweeb/autopeer-node/job-worker:latest
+                default: ghcr.io/badaimweeb/autopeer-operator/job-worker:20250919-122602-g8f1b850
                 description: |-
                   Image to be deployed to node to configure the relevant parts for peering, should you choose to differ
                   from the default image. Only applicable if type is "k8s".

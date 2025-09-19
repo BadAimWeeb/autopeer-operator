@@ -25,6 +25,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	autopeerv1 "github.com/BadAimWeeb/autopeer-operator/api/v1"
@@ -46,12 +47,22 @@ var _ = Describe("Nodes Controller", func() {
 			By("creating the custom resource for the Kind Node")
 			err := k8sClient.Get(ctx, typeNamespacedName, node)
 			if err != nil && errors.IsNotFound(err) {
+				nodes := &corev1.NodeList{}
+				Expect(k8sClient.List(ctx, nodes)).To(Succeed())
+
+				// Use the first node in the cluster for testing
+				nodeName := nodes.Items[0].Name
+				ipv4 := "172.16.0.1"
 				resource := &autopeerv1.Node{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceName,
 						Namespace: "default",
 					},
-					// TODO(user): Specify other spec details if needed.
+					Spec: autopeerv1.NodeSpec{
+						Type:        "k8s",
+						NodeName:    &nodeName,
+						IPv4Address: &ipv4,
+					},
 				}
 				Expect(k8sClient.Create(ctx, resource)).To(Succeed())
 			}
