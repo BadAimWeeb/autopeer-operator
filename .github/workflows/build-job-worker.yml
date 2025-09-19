@@ -39,6 +39,12 @@ jobs:
         run: |
           echo "REPO_NAME=${GITHUB_REPOSITORY@L}" >> $GITHUB_ENV
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build and push job-worker image
         uses: docker/build-push-action@v5
         with:
