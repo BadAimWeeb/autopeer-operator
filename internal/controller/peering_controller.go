@@ -206,8 +206,10 @@ func (r *PeeringReconciler) KubernetesDeletePeering(ctx context.Context, req ctr
 					},
 				},
 				Spec: corev1.PodSpec{
-					NodeName: *node.Spec.NodeName,
-					HostPID:  true,
+					NodeName:    *node.Spec.NodeName,
+					HostPID:     true,
+					HostNetwork: true,
+					HostIPC:     true,
 					Volumes: []corev1.Volume{{
 						Name: "root-mount",
 						VolumeSource: corev1.VolumeSource{
@@ -434,8 +436,10 @@ func (r *PeeringReconciler) KubernetesAddOrUpdatePeering(ctx context.Context, re
 					Labels: jobLabels,
 				},
 				Spec: corev1.PodSpec{
-					NodeName: *node.Spec.NodeName,
-					HostPID:  true,
+					NodeName:    *node.Spec.NodeName,
+					HostPID:     true,
+					HostNetwork: true,
+					HostIPC:     true,
 					Volumes: []corev1.Volume{{
 						Name: "root-mount",
 						VolumeSource: corev1.VolumeSource{

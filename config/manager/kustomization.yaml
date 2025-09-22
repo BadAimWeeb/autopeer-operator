@@ -5,4 +5,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: ghcr.io/badaimweeb/autopeer-operator
-  newTag: testing-15
+  newTag: testing-16
