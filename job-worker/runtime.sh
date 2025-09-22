@@ -20,6 +20,8 @@ elif [ "$TASK" = "rmpeer" ]; then
     rm -f "$NODE_ROOT$BIRD_PEERS_DIR/$ASN.conf"
 
     nsenter -m/$NODE_ROOT/proc/1/ns/mnt -- systemctl disable --now wg-quick@wgbgp$ASN || true
+    # in case systemd fails to stop the interface, try manually bringing it down
+    nsenter -m/$NODE_ROOT/proc/1/ns/mnt -- wg-quick down wgbgp$ASN || true
     rm -f "$NODE_ROOT$WIREGUARD_DIR/wgbgp$ASN.conf"
 
     nsenter -m/$NODE_ROOT/proc/1/ns/mnt -- birdc configure
