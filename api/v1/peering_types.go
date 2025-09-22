@@ -53,7 +53,7 @@ type PeeringSpec struct {
 	// Cost to reach this peer, lower values are preferred.
 	// Recommended to be consistent with your IGP cost to be able to fine-tune path selection.
 	// Leave blank to not use cost.
-	// +kubebuilder:default=-1
+	// +kubebuilder:default=0
 	// +optional
 	Cost int32 `json:"cost,omitempty"`
 

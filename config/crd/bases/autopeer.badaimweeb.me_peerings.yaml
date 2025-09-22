@@ -40,7 +40,7 @@ spec:
             description: spec defines the desired state of Peering
             properties:
               cost:
-                default: -1
+                default: 0
                 description: |-
                   Cost to reach this peer, lower values are preferred.
                   Recommended to be consistent with your IGP cost to be able to fine-tune path selection.

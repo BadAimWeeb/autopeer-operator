@@ -72,12 +72,12 @@ func GenerateConfig(peering *autopeerv1.PeeringSpec, node *autopeerv1.NodeSpec) 
 			if peering.ENH {
 				birdConfig += "        extended next hop yes;\n"
 			}
-			if peering.Cost != -1 {
+			if peering.Cost > 0 {
 				birdConfig += fmt.Sprintf("        cost %d;\n", peering.Cost)
 			}
 			birdConfig += "    };\n"
 			birdConfig += "    ipv6 {\n"
-			if peering.Cost != -1 {
+			if peering.Cost > 0 {
 				birdConfig += fmt.Sprintf("        cost %d;\n", peering.Cost)
 			}
 			birdConfig += "    };\n"
@@ -86,7 +86,7 @@ func GenerateConfig(peering *autopeerv1.PeeringSpec, node *autopeerv1.NodeSpec) 
 			if peering.PeerIPv4 != nil {
 				birdConfig += fmt.Sprintf("protocol bgp as%d_v4 from dnpeersv4 {\n", peering.PeerASN)
 				birdConfig += fmt.Sprintf("    neighbor %s as %d;\n", *peering.PeerIPv4, peering.PeerASN)
-				if peering.Cost != -1 {
+				if peering.Cost > 0 {
 					birdConfig += "    ipv4 {\n"
 					birdConfig += fmt.Sprintf("        cost %d;\n", peering.Cost)
 					birdConfig += "    };\n"
@@ -96,7 +96,7 @@ func GenerateConfig(peering *autopeerv1.PeeringSpec, node *autopeerv1.NodeSpec) 
 			if peering.PeerIPv6 != nil {
 				birdConfig += fmt.Sprintf("protocol bgp as%d_v6 from dnpeersv6 {\n", peering.PeerASN)
 				birdConfig += fmt.Sprintf("    neighbor %s%%wgbgp%d as %d;\n", *peering.PeerIPv6, peering.PeerASN, peering.PeerASN)
-				if peering.Cost != -1 {
+				if peering.Cost > 0 {
 					birdConfig += "    ipv6 {\n"
 					birdConfig += fmt.Sprintf("        cost %d;\n", peering.Cost)
 					birdConfig += "    };\n"
