@@ -20,6 +20,7 @@ import (
 	"context"
 	"net"
 
+	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -60,15 +61,14 @@ func (r *NodeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		netIP := net.ParseIP(*nodeData.Spec.IPv4Address)
 		if netIP == nil || netIP.To4() == nil {
 			// Set Degraded condition to True with appropriate message
-			nodeData.Status.Conditions = []metav1.Condition{
-				{
-					Type:    "Degraded",
-					Status:  metav1.ConditionTrue,
-					Reason:  "InvalidIPv4Address",
-					Message: "Spec.ipv4Address is not a valid IPv4 address.",
-				},
-			}
-			r.Update(ctx, nodeData)
+			meta.SetStatusCondition(&nodeData.Status.Conditions, metav1.Condition{
+				Type:    "Degraded",
+				Status:  metav1.ConditionTrue,
+				Reason:  "InvalidIPv4Address",
+				Message: "Spec.ipv4Address is not a valid IPv4 address.",
+			})
+
+			r.Status().Update(ctx, nodeData)
 			return ctrl.Result{}, nil
 		}
 	}
@@ -78,15 +78,15 @@ func (r *NodeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	if nodeData.Spec.Type == "k8s" {
 		if nodeData.Spec.NodeName == nil {
 			// Set Degraded condition to True with appropriate message
-			nodeData.Status.Conditions = []metav1.Condition{
-				{
-					Type:    "Degraded",
-					Status:  metav1.ConditionTrue,
-					Reason:  "MissingNodeName",
-					Message: "Spec.nodeName is required when Spec.type is 'k8s'.",
-				},
-			}
-			r.Update(ctx, nodeData)
+			meta.SetStatusCondition(&nodeData.Status.Conditions, metav1.Condition{
+				Type:    "Degraded",
+				Status:  metav1.ConditionTrue,
+				Reason:  "MissingNodeName",
+				Message: "Spec.nodeName is required when Spec.type is 'k8s'.",
+			})
+
+			r.Status().Update(ctx, nodeData)
+
 			return ctrl.Result{}, nil
 		}
 
@@ -94,42 +94,47 @@ func (r *NodeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		k8sNode := &corev1.Node{}
 		err = r.Get(ctx, client.ObjectKey{Name: *nodeData.Spec.NodeName}, k8sNode)
 		if err != nil {
-			// Set Degraded condition to True with appropriate message
-			nodeData.Status.Conditions = []metav1.Condition{
-				{
-					Type:    "Degraded",
-					Status:  metav1.ConditionTrue,
-					Reason:  "NodeNotFound",
-					Message: "Kubernetes node with name '" + *nodeData.Spec.NodeName + "' not found.",
-				},
-			}
-			r.Update(ctx, nodeData)
+			meta.SetStatusCondition(&nodeData.Status.Conditions, metav1.Condition{
+				Type:    "Degraded",
+				Status:  metav1.ConditionTrue,
+				Reason:  "NodeNotFound",
+				Message: "Kubernetes node with name '" + *nodeData.Spec.NodeName + "' not found.",
+			})
+
+			r.Status().Update(ctx, nodeData)
+
 			return ctrl.Result{}, nil
 		}
 
 		// If we reach here, node exists
 		// Set Available condition to True and clear other conditions
-		nodeData.Status.Conditions = []metav1.Condition{
-			{
-				Type:    "Available",
-				Status:  metav1.ConditionTrue,
-				Reason:  "NodeExists",
-				Message: "Kubernetes node with name '" + *nodeData.Spec.NodeName + "' exists.",
-			},
-		}
+
+		meta.SetStatusCondition(&nodeData.Status.Conditions, metav1.Condition{
+			Type:    "Available",
+			Status:  metav1.ConditionTrue,
+			Reason:  "NodeExists",
+			Message: "Kubernetes node with name '" + *nodeData.Spec.NodeName + "' exists.",
+		})
+
+		// Remove any Degraded conditions
+		meta.RemoveStatusCondition(&nodeData.Status.Conditions, "Degraded")
 	} else {
-		// External nodes not supported yet
-		// Set Degraded condition to True with appropriate message
-		nodeData.Status.Conditions = []metav1.Condition{
-			{
-				Type:    "Degraded",
-				Status:  metav1.ConditionTrue,
-				Reason:  "ExternalNodesNotSupported",
-				Message: "Nodes of type 'external' are not supported yet.",
-			},
-		}
+
+		meta.SetStatusCondition(&nodeData.Status.Conditions, metav1.Condition{
+			Type:    "Degraded",
+			Status:  metav1.ConditionTrue,
+			Reason:  "ExternalNodesNotSupported",
+			Message: "Nodes of type 'external' are not supported yet.",
+		})
 	}
-	r.Update(ctx, nodeData)
+
+	if meta.IsStatusConditionTrue(nodeData.Status.Conditions, "Degraded") {
+		meta.RemoveStatusCondition(&nodeData.Status.Conditions, "Available")
+	}
+	// this does not use progressing condition
+	meta.RemoveStatusCondition(&nodeData.Status.Conditions, "Progressing")
+
+	r.Status().Update(ctx, nodeData)
 
 	return ctrl.Result{}, nil
 }

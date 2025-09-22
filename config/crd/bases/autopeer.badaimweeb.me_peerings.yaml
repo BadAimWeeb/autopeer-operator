@@ -189,6 +189,10 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              provisioned:
+                default: false
+                description: Is this peering currently provisioned on the node?
+                type: boolean
             type: object
         required:
         - spec

@@ -1,4 +1,4 @@
-apiVersion: autopeer.badaimweeb.me.github.com/v1
+apiVersion: autopeer.badaimweeb.me/v1
 kind: Peering
 metadata:
   labels:

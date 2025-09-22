@@ -59,7 +59,7 @@ func GenerateConfig(peering *autopeerv1.PeeringSpec, node *autopeerv1.NodeSpec) 
 		} else {
 			wireguardConfig += "PersistentKeepalive = 25\n"
 		}
-		wireguardConfig += "AllowedIPs = 172.16.0.0/12, 10.0.0.0/8, fd00::/8, fe80::10\n"
+		wireguardConfig += "AllowedIPs = 172.16.0.0/12, 10.0.0.0/8, fd00::/8, fe80::/10\n"
 	}
 
 	birdConfig := ""
