@@ -10,7 +10,9 @@ if [ "$TASK" = "peer" ]; then
     echo "$BIRD_CONF" > "$NODE_ROOT$BIRD_PEERS_DIR/$ASN.conf"
     echo "$WG_CONF" > "$NODE_ROOT$WIREGUARD_DIR/wgbgp$ASN.conf"
 
-    nsenter -m/$NODE_ROOT/proc/1/ns/mnt -n/$NODE_ROOT/proc/1/ns/net -- systemctl enable --now wg-quick@wgbgp$ASN
+    nsenter -m/$NODE_ROOT/proc/1/ns/mnt -n/$NODE_ROOT/proc/1/ns/net -- systemctl enable wg-quick@wgbgp$ASN
+    # in case of reconfiguring an existing peer, this will restart the interface
+    nsenter -m/$NODE_ROOT/proc/1/ns/mnt -n/$NODE_ROOT/proc/1/ns/net -- systemctl restart wg-quick@wgbgp$ASN
     nsenter -m/$NODE_ROOT/proc/1/ns/mnt -n/$NODE_ROOT/proc/1/ns/net -- birdc configure
 
     echo "Peer added successfully."
