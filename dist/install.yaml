@@ -56,7 +56,7 @@ spec:
                   Optional if this node only routes IPv6, or we're using Extended Next-Hop.
                 type: string
               jobWorkerImage:
-                default: ghcr.io/badaimweeb/autopeer-operator/job-worker:20250922-134725-gd75fa17
+                default: ghcr.io/badaimweeb/autopeer-operator/job-worker:20251001-180103-gc7968af
                 description: |-
                   Image to be deployed to node to configure the relevant parts for peering, should you choose to differ
                   from the default image. Only applicable if type is "k8s".
@@ -264,6 +264,12 @@ spec:
                     default: 0
                     description: Local port for the WireGuard interface. Leave blank
                       to use a random port (you'll only make outbound connections).
+                    format: int32
+                    type: integer
+                  mtu:
+                    default: 0
+                    description: MTU for the WireGuard interface. Leave blank to use
+                      system default (usually 1420 or 1422).
                     format: int32
                     type: integer
                   peerPublicKey:
@@ -759,7 +765,7 @@ spec:
         - --health-probe-bind-address=:8081
         command:
         - /manager
-        image: ghcr.io/badaimweeb/autopeer-operator:testing-16
+        image: ghcr.io/badaimweeb/autopeer-operator:testing-17
         livenessProbe:
           httpGet:
             path: /healthz

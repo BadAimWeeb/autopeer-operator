@@ -99,6 +99,12 @@ spec:
                       to use a random port (you'll only make outbound connections).
                     format: int32
                     type: integer
+                  mtu:
+                    default: 0
+                    description: MTU for the WireGuard interface. Leave blank to use
+                      system default (usually 1420 or 1422).
+                    format: int32
+                    type: integer
                   peerPublicKey:
                     description: Peer WireGuard public key.
                     type: string
