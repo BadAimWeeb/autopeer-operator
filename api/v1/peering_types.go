@@ -93,6 +93,11 @@ type WireGuardConfig struct {
 	// Pre-shared key for the WireGuard interface. Optional but recommended for additional security.
 	// +optional
 	PresharedKey *string `json:"presharedKey,omitempty"`
+
+	// MTU for the WireGuard interface. Leave blank to use system default (usually 1420 or 1422).
+	// +kubebuilder:default=0
+	// +optional
+	MTU int32 `json:"mtu,omitempty"`
 }
 
 // PeeringStatus defines the observed state of Peering.

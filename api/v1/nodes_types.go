@@ -52,7 +52,7 @@ type NodeSpec struct {
 
 	// Image to be deployed to node to configure the relevant parts for peering, should you choose to differ
 	// from the default image. Only applicable if type is "k8s".
-	// +default:value="ghcr.io/badaimweeb/autopeer-operator/job-worker:20250922-134725-gd75fa17"
+	// +default:value="ghcr.io/badaimweeb/autopeer-operator/job-worker:20251001-180103-gc7968af"
 	JobWorkerImage string `json:"jobWorkerImage,omitempty"`
 }
 

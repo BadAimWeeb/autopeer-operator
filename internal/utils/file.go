@@ -49,12 +49,15 @@ func GenerateConfig(peering *autopeerv1.PeeringSpec, node *autopeerv1.NodeSpec) 
 			wireguardConfig += "PostUp = /usr/sbin/ip -6 route add " + *peering.PeerIPv6 + "/128 dev %i scope link src " + *peering.LocalIPv6 + " table 42\n"
 			wireguardConfig += "PreDown = /usr/sbin/ip -6 route del " + *peering.PeerIPv6 + "/128 dev %i table 42 || true\n"
 		}
+		if peering.WireGuard.MTU != 0 {
+			wireguardConfig += "MTU = " + fmt.Sprintf("%d", peering.WireGuard.MTU) + "\n"
+		}
 		wireguardConfig += "\n[Peer]\n"
 		wireguardConfig += "PublicKey = " + peering.WireGuard.PeerPublicKey + "\n"
 		if peering.WireGuard.PresharedKey != nil {
 			wireguardConfig += "PresharedKey = " + *peering.WireGuard.PresharedKey + "\n"
 		}
-		if *peering.WireGuard.Endpoint != "" {
+		if peering.WireGuard.Endpoint != nil && *peering.WireGuard.Endpoint != "" {
 			wireguardConfig += "Endpoint = " + *peering.WireGuard.Endpoint + "\n"
 		} else {
 			wireguardConfig += "PersistentKeepalive = 25\n"
